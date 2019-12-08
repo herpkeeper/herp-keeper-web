@@ -95,8 +95,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
-          }
+            "scripts": [],
+            "codeCoverage": true
+          },
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
@@ -107,7 +108,8 @@
               "e2e/tsconfig.json"
             ],
             "exclude": [
-              "**/node_modules/**"
+              "**/node_modules/**",
+              "**/*.spec.ts"
             ]
           }
         },
