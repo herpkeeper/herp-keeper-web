@@ -1,0 +1,10 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div *ngIf="complete && failed">
+  <h2 class="text-primary text-center mt-3">Failed To Activate Account</h2>
+  <p class="text-center">We are sorry, but we could not activate your account at this time.</p>
+</div>
+<div *ngIf="complete && !failed">
+  <h2 class="text-primary text-center mt-3">Account Activated</h2>
+  <p class="text-center">Thank you for activating your Herp Keeper account. You can now log in <a routerLink="/login">here.</a></p>
+</div>

@@ -3,12 +3,13 @@ sudo: false
 
 branches:
   only:
+    - dev
     - master
     
 language: node_js
 
 node_js:
-  - "12"
+  - "13"
 
 addons:
   apt:

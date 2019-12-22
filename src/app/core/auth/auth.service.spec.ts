@@ -1,5 +1,7 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 
@@ -14,11 +16,15 @@ class DummyComponent {
 describe('AuthService', () => {
   let service: AuthService;
   let router: Router;
+  let httpClient: HttpClient;
+  let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        HttpClientTestingModule,
         RouterTestingModule.withRoutes([
+          { path: 'login', component: DummyComponent },
           { path: 'home', component: DummyComponent },
           { path: 'member/dashboard', component: DummyComponent },
           { path: 'admin/dashboard', component: DummyComponent }
@@ -29,10 +35,13 @@ describe('AuthService', () => {
       ]
     });
     service = TestBed.get(AuthService);
+    httpClient = TestBed.get(HttpClient);
+    httpTestingController = TestBed.get(HttpTestingController);
     router = TestBed.get(Router);
   });
 
   afterEach(() => {
+    httpTestingController.verify();
     localStorage.removeItem('account');
   });
 
@@ -150,6 +159,139 @@ describe('AuthService', () => {
     localStorage.setItem('account', JSON.stringify(account));
     service.navigateHome();
     expect(router.navigate).toHaveBeenCalledWith(['/admin/dashboard']);
+  });
+
+  it('should authenticate', (done: DoneFn) => {
+    const credentials = {
+      username: 'user',
+      password: 'pass'
+    };
+    service.authenticate(credentials).subscribe(
+      res => {
+        expect(res).toBeTruthy();
+        expect(res.username).toBe('user');
+        expect(res.name).toBe('Name');
+        expect(res.email).toBe('test@test.com');
+        expect(res.timestamp).toBeTruthy();
+        expect(res.role).toBe('member');
+        expect(res.accessToken).toBe('access');
+        expect(res.refreshToken).toBe('refresh');
+        expect(res.createdAt).toBeTruthy();
+        expect(res.accessExpires).toBe(300);
+        // Should now also be logged in
+        done();
+      }, (error: HttpErrorResponse) => {
+        fail('Should not have failed');
+      }
+    );
+    const req = httpTestingController.expectOne('http://localhost:8080/api/authenticate');
+    expect(req.request.method).toEqual('POST');
+    const account = {
+      username: 'user',
+      email: 'test@test.com',
+      name: 'Name',
+      role: 'member',
+      accessToken: 'access',
+      refreshToken: 'refresh',
+      createdAt: new Date(),
+      accessExpires: 300
+    };
+    req.flush(account);
+  });
+
+  it('should not attempt to logout if not logged in', () => {
+    spyOn(router, 'navigate').and.callThrough();
+    service.logout().subscribe(res => {
+      expect(res).toBeFalsy();
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should logout without error', () => {
+    spyOn(localStorage, 'removeItem').and.callThrough();
+    spyOn(router, 'navigate').and.callThrough();
+    const account = {
+      username: 'user',
+      refreshToken: 'refresh',
+      timestamp: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    localStorage.setItem('account', JSON.stringify(account));
+    service.logout().subscribe(res => {
+      expect(res).toBeTruthy();
+      expect(localStorage.removeItem).toHaveBeenCalled();
+    }, err => {
+    }).add(() => {
+      expect(router.navigate).toHaveBeenCalledWith(['/home']);
+    });
+    const req = httpTestingController.expectOne('http://localhost:8080/api/logout');
+    expect(req.request.method).toEqual('POST');
+    req.flush({ result: true });
+  });
+
+  it('should logout with error', () => {
+    spyOn(localStorage, 'removeItem').and.callThrough();
+    spyOn(router, 'navigate').and.callThrough();
+    const account = {
+      username: 'user',
+      refreshToken: 'refresh',
+      timestamp: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    localStorage.setItem('account', JSON.stringify(account));
+    service.logout().subscribe(res => {
+      expect(res).toBeFalsy();
+      expect(localStorage.removeItem).toHaveBeenCalled();
+    }, err => {
+    }).add(() => {
+      expect(router.navigate).toHaveBeenCalledWith(['/home']);
+    });
+    const req = httpTestingController.expectOne('http://localhost:8080/api/logout');
+    expect(req.request.method).toEqual('POST');
+    req.flush(new Error('Failed'), { status: 403, statusText: 'Forbidden' });
+  });
+
+  it('should fail to refresh token if not logged in', () => {
+    service.refreshAccessToken().subscribe(res => {
+      fail('Should not have succeeded');
+    }, err => {
+      expect(err).toBeTruthy();
+      expect(err.message).toBe('Not logged in');
+    });
+  });
+
+  it('should refresh access token', (done: DoneFn) => {
+    const account = {
+      username: 'user',
+      refreshToken: 'refresh',
+      timestamp: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    localStorage.setItem('account', JSON.stringify(account));
+    service.refreshAccessToken().subscribe(res => {
+      expect(res).toBeTruthy();
+      done();
+    }, err => {
+      fail('Should not have failed');
+    });
+    const req = httpTestingController.expectOne('http://localhost:8080/api/token');
+    expect(req.request.method).toEqual('POST');
+    req.flush({});
+  });
+
+  it('should activate account', (done: DoneFn) => {
+    service.activateAccount('user', 'key').subscribe(res => {
+      expect(res).toBeTruthy();
+      done();
+    }, err => {
+      fail('Should not have failed');
+    });
+    const req = httpTestingController.expectOne('http://localhost:8080/api/activate-account?username=user&key=key');
+    expect(req.request.method).toEqual('GET');
+    req.flush({ result: true });
   });
 
 });

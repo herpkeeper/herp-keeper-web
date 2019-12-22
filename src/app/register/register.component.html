@@ -1,0 +1,88 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+
+  <h1 class="text-center text-primary mt-2">Herp Keeper</h1>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert class="error-alert" [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div *ngIf="!complete else completed">
+    <form [formGroup]="registerForm" class="mt-3 register-form" novalidate (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username" class="sr-only">Username</label>
+        <input type="text" id="username" class="form-control" placeholder="Username" required formControlName="username">
+        <div class="alert alert-danger validation-error" *ngIf="username.invalid && (username.dirty || username.touched)">
+          <div>Username is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="name" class="sr-only">Your Name</label>
+        <input type="text" id="name" class="form-control" placeholder="Your name" required formControlName="name">
+        <div class="alert alert-danger validation-error" *ngIf="name.invalid && (name.dirty || name.touched)">
+          <div>Name is required</div>
+        </div>
+      </div>
+
+      <div class="form-group" formGroupName="emails">
+        <div class="form-group">
+          <label for="email" class="sr-only">Email address</label>
+          <input type="email" id="email" class="form-control" placeholder="Email address" required formControlName="email">
+          <div class="alert alert-danger validation-error" *ngIf="email.invalid && (email.dirty || email.touched)">
+            <div>Email address is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmEmail" class="sr-only">Confirm email address</label>
+          <input type="email" id="confirmEmail" class="form-control" placeholder="Confirm email address" required formControlName="confirmEmail">
+          <div class="alert alert-danger validation-error" *ngIf="confirmEmail.invalid && (confirmEmail.dirty || confirmEmail.touched)">
+            <div>Email address confirmation is required</div>
+          </div>
+        </div>
+        <div *ngIf="emails.invalid && email.valid && confirmEmail.valid && (emails.dirty || emails.touched)"
+             class="alert alert-danger validation-error">
+          Email addresses must match
+        </div>
+      </div>
+
+      <div class="form-group" formGroupName="passwords">
+        <div class="form-group">
+          <label for="password" class="sr-only">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="Password" required formControlName="password">
+          <div *ngIf="password.invalid && (password.dirty || password.touched)"
+               class="alert alert-danger validation-error">
+            <div *ngIf="password.errors.required">Password is required</div>
+            <div *ngIf="password.errors.strength">
+              <span *ngFor="let error of password.errors.strength.errors">{{ error }}<br/></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword" class="sr-only">Confirm password</label>
+          <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" required formControlName="confirmPassword">
+          <div class="alert alert-danger validation-error" *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)">
+            <div>Password confirmation is required</div>
+          </div>
+        </div>
+        <div *ngIf="passwords.invalid && password.valid && confirmPassword.valid && (passwords.dirty || passwords.touched)"
+             class="alert alert-danger validation-error">
+          Passwords must match
+        </div>
+      </div>
+
+      <button class="btn btn-lg btn-block btn-primary mt-2" type="submit" [disabled]="!registerForm.valid"><fa-icon icon="check"></fa-icon> Submit</button>
+    </form>
+  </div>
+
+  <ng-template #completed>
+    <div class="alert alert-success mt-3 success-alert" role="alert">
+      <h4 class="alert-heading">Success</h4>
+      <p>Thank you for registering. An email has been sent to {{ email.value }} with instructions to finish activating your account.</p>
+      <hr/>
+      <a routerLink="/login" class="btn btn-lg btn-block btn-success mt-2"><fa-icon icon="sign-in-alt"></fa-icon> Go To Login</a>
+    </div>
+  </ng-template>
+
+</div>

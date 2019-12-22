@@ -9,16 +9,17 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { throwIfAlreadyLoaded } from './module-import.guard';
 import { TopNavComponent } from './top-nav/top-nav.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ForbiddenComponent } from './forbidden/forbidden.component';
 
 @NgModule({
-  declarations: [TopNavComponent, NotFoundComponent],
+  declarations: [TopNavComponent, NotFoundComponent, ForbiddenComponent],
   imports: [
     CommonModule,
     RouterModule,
     FontAwesomeModule,
     NgbModule
   ],
-  exports: [TopNavComponent, NotFoundComponent]
+  exports: [TopNavComponent, NotFoundComponent, ForbiddenComponent]
 })
 export class CoreModule {
 

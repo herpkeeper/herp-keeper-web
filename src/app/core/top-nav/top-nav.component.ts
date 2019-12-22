@@ -18,6 +18,15 @@ export class TopNavComponent implements OnInit {
     return this.authService.isLoggedIn();
   }
 
+  hasRole(role): boolean {
+    return this.authService.hasRole(role);
+  }
+
+  logout(event: any) {
+    event.preventDefault();
+    this.authService.logout().subscribe();
+  }
+
   dropdownClick(event: any) {
     event.preventDefault();
   }
