@@ -32,6 +32,13 @@ export class ImageService {
     return this.http.post<Image>(url, image);
   }
 
+  openImage(url: string) {
+    const image = new Image();
+    image.src = url;
+    const w = window.open(url);
+    w.document.write(image.outerHTML);
+  }
+
   getDataUrl(id: string): Observable<string> {
     return this.get(id).pipe(
       map(val => {

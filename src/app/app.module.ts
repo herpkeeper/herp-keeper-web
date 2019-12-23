@@ -13,6 +13,7 @@ import { faBinoculars } from '@fortawesome/free-solid-svg-icons/faBinoculars';
 import { faBook } from '@fortawesome/free-solid-svg-icons/faBook';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faCogs } from '@fortawesome/free-solid-svg-icons/faCogs';
+import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit';
 import { faFrog } from '@fortawesome/free-solid-svg-icons/faFrog';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe';
 import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
@@ -66,6 +67,7 @@ export class AppModule {
     library.addIcons(faBook);
     library.addIcons(faCheck);
     library.addIcons(faCogs);
+    library.addIcons(faEdit);
     library.addIcons(faFrog);
     library.addIcons(faGlobe);
     library.addIcons(faHome);

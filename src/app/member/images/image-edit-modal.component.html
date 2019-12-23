@@ -1,0 +1,57 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="modal-header">
+  <h4 *ngIf="!id.value; else existingTitle" class="modal-title">Add New Image</h4>
+  <ng-template #existingTitle>
+    <h4 class="modal-title">{{ image.title }}</h4>
+  </ng-template>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('cancel')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form novalidate [formGroup]="imageForm">
+    <!-- Title -->
+    <div class="form-group">
+      <label for="title" class="sr-only">Title</label>
+      <input type="text" id="title" class="form-control" placeholder="Title"
+             required formControlName="title" [class.is-invalid]="title.invalid">
+    </div>
+
+    <!-- Caption -->
+    <div class="form-group">
+      <label for="caption" class="sr-only">Caption</label>
+      <textarea class="form-control" id="caption" placeHolder="Caption" formControlName="caption" rows="3"></textarea>
+    </div>
+
+    <!-- If new image, allow selection of image -->
+    <div *ngIf="!id.value" class="form-group">
+      <input type="file" #imageInput style="display: none" (change)="onImageSelected()" accept="image/*"/>
+      <div>
+        <button type="button" class="btn btn-primary mr-2" (click)="selectImage()">
+          <fa-icon icon="image"></fa-icon> Select Image
+        </button>
+        <button *ngIf="image" type="button" class="btn btn-danger" (click)="clearImage()">
+          <fa-icon icon="trash-alt"></fa-icon> Clear
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- Show image here -->
+  <div *ngIf="image && !id.value">
+    <img class="img-fluid" [src]="getImageUrl()"/>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <button type="button" id="saveButton" class="btn btn-primary" (click)="save()" [disabled]="!imageForm.valid || !image">
+    <fa-icon icon="save"></fa-icon> Save
+  </button>
+  <button type="button" id="cancelButton" class="btn btn-danger" (click)="activeModal.dismiss('cancel')">
+    <fa-icon icon="times"></fa-icon> Cancel
+  </button>
+</div>

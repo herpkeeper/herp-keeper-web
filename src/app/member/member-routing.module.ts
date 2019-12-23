@@ -24,6 +24,11 @@ const routes: Routes = [
     loadChildren: () => import('./locations/locations.module').then(m => m.LocationsModule),
     canLoad: [MemberAuthGuard],
     resolve: { loading: ProfileResolverService }
+  },
+  { path: 'images',
+    loadChildren: () => import('./images/images.module').then(m => m.ImagesModule),
+    canLoad: [MemberAuthGuard],
+    resolve: { loading: ProfileResolverService }
   }
 ];
 

@@ -1,0 +1,59 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <h2 class="text-primary">Images</h2>
+  <hr class="mb-3"/>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div *ngIf="profile$ | async as profile">
+    <div class="row" *ngIf="images.length < 1; else haveImages">
+      <div class="col-md-12">
+        <div class="alert alert-warning" role="alert">
+          <h4 class="alert-heading">No Images</h4>
+          <p>No images found, please add one.</p>
+          <hr/>
+          <button class="btn btn-lg btn-primary" (click)="addImage()"><fa-icon icon="plus"></fa-icon> Add Image</button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #haveImages>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <button class="btn btn-primary" (click)="addImage()"><fa-icon icon="plus"></fa-icon> Add Image</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div *ngFor="let image of images" class="col-md-4 mb-2">
+          <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+              {{ image.title }}
+            </div>
+            <div class="card-body h-100">
+              <img *ngIf="imageUrls$.get(image._id) | async as url" class="img-fluid text-center thumbnail" [src]="url" (click)="viewImage(url)">
+              <hr/>
+              <span>{{ image.caption }}</span><br/>
+              <span class="text-muted">Updated {{ image.updatedAt | date:'short' }}</span>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-primary mr-2" (click)="editImage(image)"><fa-icon icon="edit"></fa-icon> Edit</button>
+              <button class="btn btn-danger" (click)="deleteImage(image)"><fa-icon icon="trash-alt"></fa-icon> Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <ngb-pagination [collectionSize]="numImages" [(page)]="page" [(pageSize)]="pageSize" [boundaryLinks]="true" (pageChange)="changePage($event)"></ngb-pagination>
+        </div>
+      </div>
+    </ng-template>
+
+  </div>
+
+</div>
