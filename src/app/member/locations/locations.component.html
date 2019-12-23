@@ -1,0 +1,31 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <h2 class="text-primary">Locations</h2>
+  <hr class="mb-3"/>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div *ngIf="profile$ | async as profile">
+
+    <!-- No locations -->
+    <div class="row" *ngIf="profile.locations.length < 1; else locations">
+      <div class="col-md-12">
+        <div class="alert alert-warning" role="alert">
+          <h4 class="alert-heading">No Locations</h4>
+          <p>No locations found, please add one.</p>
+          <hr/>
+          <a role="button" routerLink="/member/location" class="btn btn-lg btn-primary"><fa-icon icon="plus"></fa-icon> Add Location</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Have locations -->
+    <ng-template #locations>
+    </ng-template>
+
+  </div>
+
+</div>

@@ -1,3 +1,7 @@
+export * from './shared.module';
+
+export * from './confirm-modal/confirm-modal.component';
+
 export * from './model/account';
 export * from './model/alert';
 export * from './model/animal';

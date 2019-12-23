@@ -7,17 +7,20 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgxLoadingModule } from 'ngx-loading';
 
-import { DashboardRoutingModule } from './dashboard-routing.module';
-import { DashboardComponent } from './dashboard.component';
+import { SharedModule } from '@app/shared';
+
+import { LocationsRoutingModule } from './locations-routing.module';
+import { LocationsComponent } from './locations.component';
 
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [LocationsComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,
     NgbModule,
     NgxLoadingModule,
-    DashboardRoutingModule
+    SharedModule,
+    LocationsRoutingModule
   ]
 })
-export class DashboardModule { }
+export class LocationsModule { }

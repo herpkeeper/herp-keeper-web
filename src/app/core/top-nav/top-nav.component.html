@@ -17,6 +17,13 @@
         <li class="nav-item" routerLinkActive="active">
           <a routerLink="/news" class="nav-link" (click)="isCollapsed = true"><fa-icon icon="newspaper"></fa-icon> News</a>
         </li>
+        <!-- Member context -->
+        <li *ngIf="isLoggedIn() && hasRole('member')" class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/member/locations" (click)="isCollapsed = true"><fa-icon icon="globe"></fa-icon> Locations</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/member/images" (click)="isCollapsed = true"><fa-icon icon="image"></fa-icon> Images</a>
+        </li>
       </ul>
       <!-- Items pushed to the right -->
       <ul class="navbar-nav ml-auto">
@@ -28,6 +35,9 @@
             <a *ngIf="!isLoggedIn()" routerLink="/login" id="loginMenu" class="dropdown-item" (click)="isCollapsed = true"><fa-icon icon="sign-in-alt"></fa-icon> Login</a>
             <a *ngIf="!isLoggedIn()" routerLink="/register" id="loginMenu" class="dropdown-item" (click)="isCollapsed = true"><fa-icon icon="user-plus"></fa-icon> Register</a>
             <a *ngIf="isLoggedIn()" href="#" id="logoutMenu" class="dropdown-item" (click)="logout($event)"><fa-icon icon="sign-out-alt"></fa-icon> Logout</a>
+            <a *ngIf="isLoggedIn() && hasRole('member')" routerLink="/member/settings" routerLinkActive="active" id="memberSettingsMenu" class="dropdown-item" (click)="isCollapsed = true">
+              <fa-icon icon="cogs"></fa-icon> Settings
+            </a>
           </div>
         </li>
       </ul>

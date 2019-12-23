@@ -1,1 +1,82 @@
-<p>dashboard works!</p>
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <h2 class="text-primary">Herp Keeper Dashboard</h2>
+  <hr class="mb-3"/>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div class="row mt-2" *ngIf="profile$ | async as profile">
+    <!-- Locations -->
+    <div class="col-md-6 mb-2">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <fa-icon icon="globe"></fa-icon> Locations
+        </div>
+        <div class="card-body">
+          <div *ngIf="profile.locations.length < 1; else locations" class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">No Locations</h4>
+            <p>You will need to add at least one location before you can start adding any animals to your collection.</p>
+            <hr/>
+            <a role="button" routerLink="/member/location" class="btn btn-lg btn-primary"><fa-icon icon="plus"></fa-icon> Add Location</a>
+          </div>
+          <ng-template #locations>
+            <div class="mb-2">
+              {{ profile.locations.length }} total location(s)
+            </div>
+            <a role="button" routerLink="/member/locations" class="btn btn btn-primary"><fa-icon icon="binoculars"></fa-icon> View/Edit</a>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Species -->
+    <div class="col-md-6 mb-2">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <fa-icon icon="book"></fa-icon> Species
+        </div>
+        <div class="card-body">
+          <div *ngIf="profile.species.length < 1; else species" class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">No Species</h4>
+            <p>You will need to add at least one species before you can start adding any animals to your collection.</p>
+            <hr/>
+            <a role="button" routerLink="/member/species" class="btn btn-lg btn-primary"><fa-icon icon="plus"></fa-icon> Add Species</a>
+          </div>
+          <ng-template #species>
+            <div class="mb-2">
+              {{ profile.species.length }} total species(s)
+            </div>
+            <a role="button" routerLink="/member/spp" class="btn btn btn-primary"><fa-icon icon="binoculars"></fa-icon> View/Edit</a>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Animals -->
+    <div class="col-md-6 mb-2" *ngIf="profile.species.length > 0 && profile.locations.length > 0">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <fa-icon icon="frog"></fa-icon> Animals
+        </div>
+        <div class="card-body">
+          <div *ngIf="profile.animals.length < 1; else animals" class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">No Animals</h4>
+            <hr/>
+            <a role="button" routerLink="/member/animal" class="btn btn-lg btn-primary"><fa-icon icon="plus"></fa-icon> Add Animal</a>
+          </div>
+          <ng-template #animals>
+            <div class="mb-2">
+              {{ profile.animals.length }} total animals
+            </div>
+            <a role="button" routerLink="/member/animals" class="btn btn btn-primary"><fa-icon icon="binoculars"></fa-icon> View/Edit</a>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

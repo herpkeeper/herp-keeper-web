@@ -1,0 +1,68 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <h2 class="text-primary">{{ name.value || 'New Location' }}</h2>
+  <hr class="mb-3"/>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <form novalidate [formGroup]="locationForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-8">
+        <!-- Name -->
+        <div class="form-group">
+          <label for="name" class="sr-only">Name</label>
+          <input type="text" id="name" class="form-control" placeholder="Location name" required formControlName="name">
+        </div>
+
+        <!-- Geolocation -->
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Latitude" aria-label="Latitude" required readonly formControlName="geoLatitude">
+            <input type="text" class="form-control" placeholder="Longitude" aria-label="Longitude" required readonly formControlName="geoLongitude">
+            <div class="input-group-append">
+              <button type="button" class="btn btn-primary" (click)="lookupLocation()"><fa-icon icon="binoculars"></fa-icon> Lookup Location</button>
+            </div>
+          </div>
+        </div>
+        <!-- Address -->
+        <div class="form-group" *ngIf="fullAddress.value">
+          <label for="fullAddress" class="sr-only">Full Address</label>
+          <input type="text" id="fullAddress" class="form-control" placeholder="Full address" readonly formControlName="fullAddress">
+        </div>
+        <div *ngIf="locationForm.valid">
+          <agm-map [latitude]="geoLatitude.value" [longitude]="geoLongitude.value" [zoom]="17">
+            <agm-marker [latitude]="geoLatitude.value" [longitude]="geoLongitude.value"></agm-marker>
+          </agm-map>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div *ngIf="!imageId.value; else imageSelected">
+          No image selected
+          <br/>
+          <button type="button" class="btn btn-primary" (click)="selectImage()"><fa-icon icon="image"></fa-icon> Select Image</button>
+        </div>
+        <ng-template #imageSelected>
+          <h3 class="text-primary">Selected Image</h3>
+          <hr/>
+          <div>
+            <img *ngIf="imageUrl$ | async as url" class="img-fluid" [src]="url">
+          </div>
+          <div class="mt-2">
+            <button class="btn btn-sm btn-danger" type="button" (click)="removeImage()"><fa-icon icon="trash-alt"></fa-icon> Remove</button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-md-12">
+        <button class="btn btn-lg btn-primary" type="submit" [disabled]="!locationForm.valid"><fa-icon icon="save"></fa-icon> Save</button>
+      </div>
+    </div>
+  </form>
+
+</div>

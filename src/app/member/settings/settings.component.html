@@ -1,0 +1,117 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<ng-template #foodTypeModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add Food Type</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('cancel')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form novalidate [formGroup]="addFoodTypeForm">
+      <div class="form-group">
+        <label for="type" class="sr-only">Food Type</label>
+        <input class="form-control" type="text" placeholder="Food type" required formControlName="type">
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="addButton" class="btn btn-primary" [disabled]="!addFoodTypeForm.valid" (click)="addFoodTypeModalSubmit(modal)">
+      <fa-icon icon="plus"></fa-icon> Add
+    </button>
+    <button type="button" id="cancelButton" class="btn btn-danger" (click)="modal.dismiss('cancel')">
+      <fa-icon icon="times"></fa-icon> Cancel
+    </button>
+  </div>
+</ng-template>
+
+<div class="container">
+  <h2 class="text-primary">My Settings</h2>
+  <hr class="mb-3"/>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div *ngIf="profile$ | async as profile">
+    <form novalidate [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+      <ngb-tabset>
+        <!-- General -->
+        <ngb-tab title="General">
+          <ng-template ngbTabContent>
+            <h4 class="text-primary">General Account Settings</h4>
+
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input class="form-control" type="text" id="name" name="name" placeholder="Name" required formControlName="name"
+                     [class.is-invalid]="name.invalid && (name.touched || name.dirty)">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input class="form-control" type="email" id="email" name="email" placeholder="Email" required formControlName="email"
+                     [class.is-invalid]="email.invalid && (email.touched || email.dirty)">
+            </div>
+
+            <!-- Password -->
+            <div class="form-group" formGroupName="passwords">
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Password" formControlName="password">
+                <div *ngIf="password.invalid && (password.dirty || password.touched)"
+                     class="alert alert-danger validation-error">
+                  <div *ngIf="password.errors.strength">
+                    <span *ngFor="let error of password.errors.strength.errors">{{ error }}<br/></span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group" *ngIf="password.value">
+                <label for="confirmPassword">Confirm password</label>
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" formControlName="confirmPassword">
+              </div>
+              <div *ngIf="passwords.invalid && password.valid && confirmPassword.valid && (passwords.dirty || passwords.touched)"
+                   class="alert alert-danger validation-error">
+                Passwords must match
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab> <!-- End general -->
+
+        <!-- Feeding -->
+        <ngb-tab title="Feeding">
+          <ng-template ngbTabContent>
+            <h4 class="text-primary">Feeding Settings</h4>
+            <hr/>
+            <h5 class="text-primary">Food Types</h5>
+            <!-- Food types -->
+            <div class="alert alert-warning" *ngIf="!profile.foodTypes || profile.foodTypes.length < 1">
+              No food types found, you will need to add at least one before you can feed your animals.
+            </div>
+            <div class="mb-2">
+              <button type="button" class="btn btn-primary btn-sm" (click)="addFoodType(foodTypeModal)"><fa-icon icon="plus"></fa-icon> Add Type</button>
+            </div>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th class="col">Type</th>
+                  <th class="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr formArrayName="foodTypes" *ngFor="let foodType of settingsForm['controls'].foodTypes['controls']; let i = index;">
+                  <td>{{ foodType.value }}</td>
+                  <td><button type="button" class="btn btn-sm btn-danger" (click)="removeFoodType(i)"><fa-icon icon="trash-alt"></fa-icon></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+        </ngb-tab> <!-- End feeding -->
+      </ngb-tabset>
+      <hr/>
+      <div>
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="!settingsForm.valid"><fa-icon icon="save"></fa-icon> Save</button>
+      </div>
+    </form>
+  </div>
+
+</div>
