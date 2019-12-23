@@ -24,6 +24,31 @@
 
     <!-- Have locations -->
     <ng-template #locations>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <a routerLink="/member/location" class="btn btn-primary"><fa-icon icon="plus"></fa-icon> Add New Location</a>
+        </div>
+      </div>
+
+      <!-- Iterate over locations -->
+      <div class="row">
+        <div *ngFor="let location of profile.locations" class="col-md-6 mb-2">
+          <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+              {{ location.name }}
+            </div>
+            <div class="card-body h-100">
+              {{ location.fullAddress }}<br/>
+              <img *ngIf="imageUrls$.get(location.imageId) | async as url" class="img-fluid text-center thumbnail mb-2" [src]="url" (click)="viewImage(url)">
+              <div>
+                <a [routerLink]="['/member/location', location._id]" class="btn btn-primary mr-2"><fa-icon icon="edit"></fa-icon> Edit</a>
+                <button class="btn btn-danger" (click)="deleteLocation(location)" [disabled]="isReferenced(location)"><fa-icon icon="trash-alt"></fa-icon> Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </ng-template>
 
   </div>

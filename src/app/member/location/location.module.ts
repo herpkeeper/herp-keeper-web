@@ -13,9 +13,10 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { SharedModule } from '@app/shared';
 import { LocationRoutingModule } from './location-routing.module';
 import { LocationComponent } from './location.component';
+import { LocationLookupModalComponent } from './location-lookup-modal.component';
 
 @NgModule({
-  declarations: [LocationComponent],
+  declarations: [LocationComponent, LocationLookupModalComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -25,6 +26,9 @@ import { LocationComponent } from './location.component';
     AgmCoreModule,
     SharedModule,
     LocationRoutingModule
+  ],
+  entryComponents: [
+    LocationLookupModalComponent
   ]
 })
 export class LocationModule { }

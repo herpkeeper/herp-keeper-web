@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+import { AgmCoreModule } from '@agm/core';
+
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgxLoadingModule } from 'ngx-loading';
@@ -20,6 +22,7 @@ import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
 import { faImage } from '@fortawesome/free-solid-svg-icons/faImage';
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons/faNewspaper';
 import { faSave } from '@fortawesome/free-solid-svg-icons/faSave';
+import { faSearchLocation } from '@fortawesome/free-solid-svg-icons/faSearchLocation';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons/faSignInAlt';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
@@ -28,6 +31,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons/faUserPlus';
 
+import { environment } from '@env/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from '@app/core';
@@ -50,6 +54,9 @@ import { httpInterceptorProviders } from '@app/http-interceptors';
       primaryColour: '#36942b',
       secondaryColour: '#36942b',
       tertiaryColour: '#36942b'
+    }),
+    AgmCoreModule.forRoot({
+      apiKey: environment.googleCloud.apiKey
     }),
     AppRoutingModule,
     CoreModule,
@@ -74,6 +81,7 @@ export class AppModule {
     library.addIcons(faImage);
     library.addIcons(faNewspaper);
     library.addIcons(faSave);
+    library.addIcons(faSearchLocation);
     library.addIcons(faSignInAlt);
     library.addIcons(faSignOutAlt);
     library.addIcons(faPlus);

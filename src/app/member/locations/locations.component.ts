@@ -27,6 +27,33 @@ export class LocationsComponent extends BaseComponent implements OnInit {
     super();
   }
 
+  viewImage(url: string) {
+    this.imageService.openImage(url);
+  }
+
+  isReferenced(location: Location) {
+    return this.profileStoreService.isLocationReferenced(location._id);
+  }
+
+  deleteLocation(location: Location) {
+    const modalRef = this.modalService.open(ConfirmModalComponent);
+    modalRef.componentInstance.title = `Delete ${location.name}?`;
+    modalRef.componentInstance.body = 'Are you sure you want to delete this location?';
+
+    modalRef.result.then((res) => {
+      this.alerts = [];
+      this.loading = true;
+      this.profileStoreService.removeLocation(location).subscribe(l => {
+        this.alerts.push({type: 'success', message: 'Location successfully deleted'});
+        this.loading = false;
+      }, err => {
+        this.alerts.push({type: 'danger', message: 'Failed to delete location'});
+        this.loading = false;
+      });
+    }).catch((err) => {
+    });
+  }
+
   subscribeToProfileChanges() {
     this.profileSubscription = this.profile$.subscribe(profile => {
       this.imageUrls$ = new Map();

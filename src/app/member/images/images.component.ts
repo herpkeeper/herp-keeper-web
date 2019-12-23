@@ -7,7 +7,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 import { BaseComponent, ImageService, ProfileStoreService, TitleService } from '@app/core';
 import { ConfirmModalComponent, Image, Profile } from '@app/shared';
-import { ImageEditModalComponent } from './image-edit-modal.component'
+import { ImageEditModalComponent } from './image-edit-modal.component';
 
 @Component({
   selector: 'herp-keeper-images',

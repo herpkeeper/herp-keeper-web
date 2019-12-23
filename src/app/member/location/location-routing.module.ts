@@ -8,6 +8,10 @@ const routes: Routes = [
   { path: '',
     component: LocationComponent,
     canActivate: [MemberAuthGuard]
+  },
+  { path: ':id',
+    component: LocationComponent,
+    canActivate: [MemberAuthGuard]
   }
 ];
 

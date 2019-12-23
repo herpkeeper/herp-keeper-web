@@ -1,6 +1,7 @@
 export * from './shared.module';
 
 export * from './confirm-modal/confirm-modal.component';
+export * from './image-selector-modal/image-selector-modal.component';
 
 export * from './model/account';
 export * from './model/alert';
@@ -9,6 +10,7 @@ export * from './model/boolean-result';
 export * from './model/class';
 export * from './model/credentials';
 export * from './model/count-result';
+export * from './model/geo-json';
 export * from './model/image';
 export * from './model/location';
 export * from './model/order';
