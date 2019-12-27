@@ -1,0 +1,14 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <p *ngFor="let alert of alerts" class="mb-2">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div *ngIf="profile$ | async as profile">
+    <herp-keeper-animal-detail *ngIf="!edit" [animalId]="animalId" (loading)="loadingChange($event)" (alerts)="alertsChange($event)" (edit)="editChange($event)">
+    </herp-keeper-animal-detail>
+    <herp-keeper-animal-edit *ngIf="edit" [profile]="profile" [animalId]="animalId" (loading)="loadingChange($event)" (alerts)="alertsChange($event)" (edit)="editChange($event)">
+    </herp-keeper-animal-edit>
+  </div>
+</div>

@@ -1,0 +1,135 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <h2 class="text-primary">Feeding Time!</h2>
+  <hr/>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div *ngIf="profile$ | async as profile">
+    <!-- No animals -->
+    <div *ngIf="profile.animals.length < 1; else haveAnimals" class="alert alert-warning">
+      <h4 class="alert-heading">No Animals</h4>
+      <p>Guess you won't be doing any feeding today!</p>
+    </div>
+
+    <!-- Have animals -->
+    <ng-template #haveAnimals>
+
+      <!-- First select location  and date-->
+      <div *ngIf="selectedAnimalsFormArray.length < 1" class="row">
+        <div class="col-md-12">
+          <p>To get started please select when and where you will be feeding.</p>
+          <form novalidate [formGroup]="locationDateForm">
+            <div class="form-row">
+              <div class="col-md-6 form-group">
+                <div class="input-group">
+                  <input readonly id="feedingDate" class="form-control" placeholder="Feeding date" ngbDatepicker #d="ngbDatepicker" formControlName="feedingDate">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="button" (click)="d.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 form-group">
+                <select class="form-control" formControlName="location" (change)="changeLocation()">
+                  <option value="" selected>-- Select Location --</option>
+                  <option *ngFor="let location of profile.locations" [value]="location._id">
+                    {{ location.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div> <!-- End location and date -->
+
+      <!-- Next select animals to feed -->
+      <div *ngIf="selectedLocation && selectedAnimalsFormArray.length < 1" class="row">
+        <div class="col-md-12">
+          <p>Now select animals from the list below.</p>
+          <form novalidate [formGroup]="selectAnimalForm">
+            <div class="mb-2">
+              <button class="btn btn-sm btn-primary mr-1" type="button" (click)="selectAll()"><fa-icon icon="check"></fa-icon> Select All</button>
+              <button class="btn btn-sm btn-danger mr-1" type="button" (click)="selectNone()"><fa-icon icon="times"></fa-icon> Select None</button>
+            </div>
+            <div class="input-group mb-1">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Filter</span>
+              </div>
+              <select class="form-control" formControlName="speciesFilter" (change)="filterAnimals()">
+                <option selected value="">Species</option>
+                <option [value]="species._id" *ngFor="let species of allSpecies">
+                  {{ species.commonName }}
+                </option>
+              </select>
+            </div>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Species</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr formArrayName="animals" *ngFor="let animal of selectAnimalForm['controls'].animals['controls']; let i = index;">
+                  <td [formGroupName]="i"><input type="checkbox" formControlName="selected"></td>
+                  <td [formGroupName]="i">{{ animal.controls.name.value }}</td>
+                  <td [formGroupName]="i">{{ animal.controls.species.value }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <button class="btn btn-primary" type="button" [disabled]="!hasSelectedAnimals() || locationDateForm.invalid" (click)="next()"><fa-icon icon="arrow-right"></fa-icon> Next</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Now feed these things -->
+      <div class="row" *ngIf="selectedAnimalsFormArray.length > 0">
+        <div class="col-md-12">
+          <div *ngIf="profile.foodTypes.length < 1; else feed" class="alert alert-warning">
+            <h4 class="alert-heading">No Food Types</h4>
+            <p>You can not feed any animals until you have added at least one food type. Please go <a routerLink="/settings">here</a> to add some.</p>
+          </div>
+
+          <ng-template #feed>
+            <form novalidate [formGroup]="feedAnimalForm">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Species</th>
+                    <th scope="col">Food</th>
+                    <th scope="col">Quatity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr formArrayName="animals" *ngFor="let animal of feedAnimalForm['controls'].animals['controls']; let i = index;">
+                    <td [formGroupName]="i">{{ animal.controls.name.value }}</td>
+                    <td [formGroupName]="i">{{ animal.controls.species.value }}</td>
+                    <td [formGroupName]="i">
+                      <select class="form-control form-control-sm" required formControlName="foodType">
+                        <option value="" selected></option>
+                        <option [value]="foodType" *ngFor="let foodType of profile.foodTypes">{{ foodType }}</option>
+                      </select>
+                    </td>
+                    <td [formGroupName]="i"><input class="form-control form-control-sm" min="1" type="number" required formControlName="quantity"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div>
+                <button class="btn btn-primary mr-2" type="button" (click)="back()"><fa-icon icon="arrow-left"></fa-icon> Back</button>
+                <button class="btn btn-info" type="button" [disabled]="feedAnimalForm.invalid" (click)="feedAnimals()"><fa-icon icon="utensils"></fa-icon> Feed!</button>
+              </div>
+            </form>
+          </ng-template>
+        </div>
+      </div> <!-- End feeding -->
+
+    </ng-template>
+
+  </div>
+
+</div>

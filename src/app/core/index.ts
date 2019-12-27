@@ -6,6 +6,7 @@ export * from './not-found/not-found.component';
 
 export * from './animal/animal.service';
 export * from './auth/auth.service';
+export * from './cms/cms.service';
 export * from './geocode/geocode.service';
 export * from './image/image.service';
 export * from './location/location.service';

@@ -14,6 +14,7 @@ export * from './model/geo-json';
 export * from './model/image';
 export * from './model/location';
 export * from './model/order';
+export * from './model/post';
 export * from './model/profile';
 export * from './model/species';
 export * from './model/sub-order';

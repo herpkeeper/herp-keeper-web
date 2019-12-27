@@ -33,6 +33,14 @@
             "scripts": []
           },
           "configurations": {
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -70,6 +78,9 @@
             "browserTarget": "herp-keeper:build"
           },
           "configurations": {
+            "local": {
+              "browserTarget": "herp-keeper:build:local"
+            },
             "production": {
               "browserTarget": "herp-keeper:build:production"
             }

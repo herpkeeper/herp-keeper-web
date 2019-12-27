@@ -9,6 +9,11 @@ export const environment = {
   websocketUrl: 'ws://localhost:8080/ws',
   googleCloud: {
     apiKey: ''
+  },
+  cms: {
+    space: 'id',
+    accessToken: 'token',
+    host: 'preview.contentful.com'
   }
 };
 

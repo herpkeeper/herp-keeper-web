@@ -13,6 +13,12 @@ const routes: Routes = [
     redirectTo: '/home',
     pathMatch: 'full'
   },
+  { path: 'news',
+    loadChildren: () => import('./news/news.module').then(m => m.NewsModule)
+  },
+  { path: 'about',
+    loadChildren: () => import('./about/about.module').then(m => m.AboutModule)
+  },
   { path: 'register',
     loadChildren: () => import('./register/register.module').then(m => m.RegisterModule)
   },
@@ -22,8 +28,7 @@ const routes: Routes = [
   { path: 'login',
     loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
   },
-  {
-    path: 'member',
+  { path: 'member',
     loadChildren: () => import('./member/member.module').then(m => m.MemberModule)
   },
   { path: '403', component: ForbiddenComponent },

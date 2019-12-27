@@ -1,0 +1,105 @@
+<h2 class="text-primary">{{ name.value || 'New Animal' }}</h2>
+<hr class="mb-3"/>
+
+<form novalidate [formGroup]="editForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Name -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" class="form-control" placeholder="Name" required formControlName="name"
+               [class.is-invalid]="name.invalid && (name.touched || name.dirty)">
+      </div>
+
+      <!-- Location -->
+      <div class="form-group">
+        <label for="location">Location</label>
+        <select id="location" class="form-control" formControlName="location"
+                [class.is-invalid]="location.invalid && (location.touched || location.dirty)">
+          <option *ngFor="let location of profile.locations" [ngValue]="location._id">
+            {{ location.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Species -->
+      <div class="form-group">
+        <label for="species">Species</label>
+        <select id="species" class="form-control" formControlName="species"
+                [class.is-invalid]="species.invalid && (species.touched || species.dirty)">
+          <option *ngFor="let species of profile.species" [ngValue]="species._id">
+            {{ species.commonName }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Sex -->
+      <div class="form-group">
+        <label for="sex">Sex</label>
+        <select id="sex" class="form-control" formControlName="sex">
+          <option value="U">Unknown</option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+      </div>
+
+      <!-- Birth and acquisition -->
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="birthDate">Birth date</label>
+          <div class="input-group">
+            <input readonly id="birthDate" class="form-control" placeholder="Birth date" ngbDatepicker #d1="ngbDatepicker" formControlName="birthDate">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" type="button" (click)="d1.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="acquisitionDate">Acquisition date</label>
+          <div class="input-group">
+            <input readonly id="acquisitionDate" class="form-control" placeholder="Acquisition date" ngbDatepicker #d2="ngbDatepicker" formControlName="acquisitionDate">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" type="button" (click)="d2.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preffered food -->
+      <div class="form-group">
+        <label for="preferredFood">Preferred food</label>
+        <select id="preferredFood" class="form-control" formControlName="preferredFood">
+          <option selected value=""></option>
+          <option *ngFor="let foodType of profile.foodTypes" [value]="foodType">
+            {{ foodType }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Images -->
+    <div class="col-md-4">
+      <h3 class="text-primary">Images</h3>
+      <div class="mb-2">
+        <button class="btn btn-primary" type="button" (click)="addImages()"><fa-icon icon="plus"></fa-icon> Add Images</button>
+      </div>
+      <div class="mb-1" *ngFor="let image of images">
+        <img *ngIf="imageUrls$.get(image.imageId) | async as url" class="img-fluid text-center thumbnail" [src]="url">
+        <div class="mt-1">
+          <button *ngIf="!image.default" type="button" class="btn btn-primary btn-sm mr-1" (click)="setDefaultImage(image)">
+            <fa-icon icon="star"></fa-icon> Set Default
+          </button>
+          <span *ngIf="image.default" class="mr-1"><fa-icon icon="star" class="text-primary"></fa-icon></span>
+          <button class="btn btn-danger btn-sm" type="button" (click)="removeImage(image)"><fa-icon icon="trash-alt"></fa-icon></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-12">
+      <button class="btn btn-lg btn-primary mr-2" type="submit" [disabled]="!editForm.valid"><fa-icon icon="save"></fa-icon> Save</button>
+      <button class="btn btn-lg btn-danger" type="button" (click)="cancel()"><fa-icon icon="times"></fa-icon> Cancel</button>
+    </div>
+  </div>
+</form>

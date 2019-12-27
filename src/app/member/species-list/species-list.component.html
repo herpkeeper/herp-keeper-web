@@ -1,0 +1,52 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <h2 class="text-primary">Species</h2>
+  <hr class="mb-3"/>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div *ngIf="profile$ | async as profile">
+
+    <!-- No species -->
+    <div class="row" *ngIf="profile.species.length < 1; else species">
+      <div class="col-md-12">
+        <div class="alert alert-warning" role="alert">
+          <h4 class="alert-heading">No Species</h4>
+          <p>No species found, please add one.</p>
+          <hr/>
+          <a role="button" routerLink="/member/species" class="btn btn-lg btn-primary"><fa-icon icon="plus"></fa-icon> Add Species</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Have species -->
+    <ng-template #species>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <a routerLink="/member/species" class="btn btn-primary"><fa-icon icon="plus"></fa-icon> Add New Species</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div *ngFor="let species of allSpecies" class="col-md-6 mb-2">
+          <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+              {{ species.commonName }} <fa-icon *ngIf="species.venomous" icon="skull-crossbones"></fa-icon>&nbsp;<fa-icon *ngIf="species.potentiallyHarmful" icon="exclamation-triangle"></fa-icon>
+            </div>
+            <div class="card-body h-100">
+              <img *ngIf="imageUrls$.get(species.imageId) | async as url" class="img-fluid text-center thumbnail" [src]="url" (click)="viewImage(url)">
+              <p class="font-italic">{{ species.genus }} {{ species.species }} {{ species.subSpecies }}</p>
+              <a [routerLink]="['/member/species', species._id]" class="btn btn-primary mr-2"><fa-icon icon="edit"></fa-icon> Edit</a>
+              <button class="btn btn-danger" [disabled]="isReferenced(species)" (click)="deleteSpecies(species)"><fa-icon icon="trash-alt"></fa-icon> Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+  </div>
+
+</div>

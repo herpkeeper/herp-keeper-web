@@ -1,0 +1,111 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <h2 class="text-primary">{{ commonName.value || 'New Species' }}</h2>
+  <hr class="mb-3"/>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <form novalidate [formGroup]="speciesForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-8">
+        <!-- Common name -->
+        <div class="form-group">
+          <label for="commonName">Common name</label>
+          <input type="text" id="commonName" class="form-control" placeholder="Common name" required formControlName="commonName"
+                 [class.is-invalid]="commonName.invalid && (commonName.touched || commonName.dirty)">
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-6">
+            <label for="venomous">Venomous?</label>
+            <select id="venomous" class="form-control" formControlName="venomous">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="potentiallyHarmful">Potentially harmful?</label>
+            <select id="potentiallyHarmful" class="form-control" formControlName="potentiallyHarmful">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Scientific name -->
+        <div class="form-group">
+          <label>Scientific name</label>
+          <input type="text" class="form-control mb-2" placeholder="Genus" formControlName="genus">
+          <input type="text" class="form-control mb-2" placeholder="Species" formControlName="species">
+          <input type="text" class="form-control" placeholder="Sub species" formControlName="subSpecies">
+        </div>
+
+        <div class="mb-2">
+          <button *ngIf="!advanced" (click)="advanced = true" class="btn btn-primary btn-sm"><fa-icon icon="eye"></fa-icon> Show Advanced</button>
+          <button *ngIf="advanced" (click)="advanced = false" class="btn btn-primary btn-sm"><fa-icon icon="eye-slash"></fa-icon> Hide Advanced</button>
+        </div>
+
+        <!-- Advanced -->
+        <ng-container *ngIf="advanced">
+          <!-- Class -->
+          <div class="form-group">
+            <label for="class">Class</label>
+            <select id="class" class="form-control" formControlName="class" (change)="changeClass()">
+              <option *ngFor="let class of classes" [ngValue]="class.name">
+                {{ class.displayName }} ({{ class.name }})
+              </option>
+            </select>
+          </div>
+
+          <!-- Order -->
+          <div class="form-group" *ngIf="class.value">
+            <label for="order">Order</label>
+            <select id="order" class="form-control" formControlName="order" (change)="changeOrder()">
+              <option *ngFor="let order of orders" [ngValue]="order.name">
+                {{ order.displayName }} ({{ order.name }})
+              </option>
+            </select>
+          </div>
+
+          <!-- Suborder -->
+          <div class="form-group" *ngIf="order.value && subOrders.length > 0">
+            <label for="subOrder">Suborder</label>
+            <select id="subOrder" class="form-control" formControlName="subOrder">
+              <option *ngFor="let subOrder of subOrders" [ngValue]="subOrder.name">
+                {{ subOrder.displayName }} ({{ subOrder.name }})
+              </option>
+            </select>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="col-md-4">
+        <div *ngIf="!imageId.value; else imageSelected">
+          No image selected
+          <br/>
+          <button type="button" class="btn btn-primary" (click)="selectImage()"><fa-icon icon="image"></fa-icon> Select Image</button>
+        </div>
+        <ng-template #imageSelected>
+          <h3 class="text-primary">Selected Image</h3>
+          <hr/>
+          <div>
+            <img *ngIf="imageUrl$ | async as url" class="img-fluid" [src]="url">
+          </div>
+          <div class="mt-2">
+            <button class="btn btn-sm btn-danger" type="button" (click)="removeImage()"><fa-icon icon="trash-alt"></fa-icon> Remove</button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-md-12">
+        <button class="btn btn-lg btn-primary" type="submit" [disabled]="!speciesForm.valid"><fa-icon icon="save"></fa-icon> Save</button>
+      </div>
+    </div>
+  </form>
+
+</div>

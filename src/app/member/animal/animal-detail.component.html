@@ -1,0 +1,71 @@
+<div class="alert alert-danger" *ngIf="!animal">
+  <h4 class="alert-heading">Animal not found</h4>
+  <p>Could not find animal with id of {{ animalId }}</p>
+</div>
+
+<ng-container *ngIf="animal">
+  <h2 class="text-primary">{{ animal.name }}</h2>
+  <hr class="mb-3"/>
+
+  <div class="row">
+    <div class="col-md-6">
+      <dl class="row">
+        <dt class="col-sm-3 text-primary">Location</dt>
+        <dd class="col-sm-9">{{ location.name }}</dd>
+
+        <dt class="col-sm-3 text-primary">Species</dt>
+        <dd class="col-sm-9">{{ species.commonName }}</dd>
+
+        <dt class="col-sm-3 text-primary">Sex</dt>
+        <dd class="col-sm-9">{{ animal.sex | sex }}</dd>
+      </dl>
+    </div>
+    <div class="col-md-6">
+      <dl class="row">
+        <dt class="col-sm-3 text-primary">Birth date</dt>
+        <dd class="col-sm-9">{{ animal.birthDate | date }}</dd>
+
+        <dt class="col-sm-3 text-primary">Acquisition date</dt>
+        <dd class="col-sm-9">{{ animal.acquisitionDate | date }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <h4 class="text-primary">Feeding Record</h4>
+      <div *ngIf="allFeedings.length < 1; else haveFeedings" class="alert alert-warning">
+        No feedings have been recorded.
+      </div>
+      <ng-template #haveFeedings>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Food</th>
+              <th scope="col">Quantity</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let feeding of feedings">
+              <td scope="col">{{ feeding.feedingDate | date }}</td>
+              <td scope="col">{{ feeding.type }}</td>
+              <td scope="col">{{ feeding.quantity }}</td>
+              <td scopd="col"><button class="btn btn-sm btn-danger" type="button" (click)="deleteFeeding(feeding)"><fa-icon icon="trash-alt"></fa-icon></button></td>
+            </tr>
+          </tbody>
+        </table>
+        <ngb-pagination [collectionSize]="numFeedings" [(page)]="feedingPage" [(pageSize)]="feedingPageSize" [boundaryLinks]="true" (pageChange)="changeFeedingPage($event)"></ngb-pagination>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <button class="btn btn-primary mr-2" type="button" (click)="editAnimal()"><fa-icon icon="edit"></fa-icon> Edit</button>
+      <a routerLink="/member/animals" class="btn btn-danger"><fa-icon icon="arrow-left"></fa-icon> Back</a>
+    </div>
+  </div>
+
+</ng-container>

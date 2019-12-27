@@ -1,0 +1,18 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <h1 class="text-primary text-center">News</h1>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div *ngFor="let post of posts" class="mb-2">
+    <h3 class="text-primary">{{ post.title }} - {{ post.createdAt | date }}</h3>
+    <hr/>
+    <div [innerHTML]="post.body"></div>
+  </div>
+
+  <ngb-pagination [collectionSize]="numResults" [(page)]="page" [(pageSize)]="pageSize" [boundaryLinks]="true" (pageChange)="changePage($event)"></ngb-pagination>
+
+</div>

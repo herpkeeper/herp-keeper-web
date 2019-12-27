@@ -1,0 +1,95 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<div class="container">
+  <h2 class="text-primary">Animals</h2>
+  <hr class="mb-3"/>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div *ngIf="profile$ | async as profile">
+    <!-- No animals -->
+    <div class="row" *ngIf="profile.animals.length < 1; else animals">
+      <div class="col-md-12">
+        <div class="alert alert-warning" role="alert">
+          <h4 class="alert-heading">No Animals</h4>
+          <p>No animals found, please add one.</p>
+          <hr/>
+          <div>
+            <a role="button" routerLink="/member/animal" class="btn btn-lg btn-primary"><fa-icon icon="plus"></fa-icon> Add Animal</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Have animals -->
+    <ng-template #animals>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <a routerLink="/member/animal" class="btn btn-primary mr-2"><fa-icon icon="plus"></fa-icon> Add New Animal</a>
+          <a routerLink="/member/feed" class="btn btn-info"><fa-icon icon="utensils"></fa-icon> Feed Animals</a>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <form novalidate [formGroup]="filterForm">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Filter</span>
+              </div>
+              <select class="form-control" formControlName="speciesFilter" (change)="filter()">
+                <option selected value="">Species</option>
+                <option [value]="species._id" *ngFor="let species of allSpecies">
+                  {{ species.commonName }}
+                </option>
+              </select>
+              <select class="form-control" formControlName="sexFilter" (change)="filter()">
+                <option selected value="">Sex</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Iterate over animals -->
+      <div class="row">
+        <div *ngFor="let animal of filteredAnimals" class="col-md-6 mb-2">
+          <div *ngIf="findSpecies(animal.speciesId) as species" class="card h-100">
+            <div class="card-header bg-primary text-white">
+              {{ animal.name }}
+              <span *ngIf="animal.sex != 'U'"><fa-icon icon="{{ animal.sex | sex:'icon' }}"></fa-icon>&nbsp;</span>
+              <span *ngIf="species.venomous" icon="skull-crossbones"><fa-icon icon="skull-crossbones"></fa-icon>&nbsp;</span>
+              <span *ngIf="species.potentiallyHarmful"><fa-icon icon="exclamation-triangle"></fa-icon></span>
+            </div>
+            <div *ngIf="findLocation(animal.locationId) as location" class="card-body h-100">
+              <div class="row">
+                <div class="col-md-6">
+                  {{ species.commonName }}<br/>
+                  Location: {{ location.name }}<br/>
+                  <span *ngIf="getLastFeeding(animal) as feeding">Last feeding: {{ feeding.feedingDate | date }}</span>
+                </div>
+                <div class="col-md-6">
+                  <img *ngIf="imageUrls$.get(animal._id) | async as url" class="img-fluid text-center thumbnail" [src]="url">
+                </div>
+              </div>
+              <div class="row mt-1">
+                <div class="col-md-12">
+                  <a [routerLink]="['/member/animal', animal._id]" class="btn btn-primary mr-2"><fa-icon icon="binoculars"></fa-icon> View/Edit</a>
+                  <button class="btn btn-danger" (click)="deleteAnimal(animal)"><fa-icon icon="trash-alt"></fa-icon> Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </ng-template>
+
+  </div>
+
+</div>
