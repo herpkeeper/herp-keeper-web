@@ -17,7 +17,7 @@ export class CmsService {
     this.client = createClient(environment.cms);
   }
 
-  getEntries(query: Object): Observable<EntryCollection<any>> {
+  getEntries(query: any): Observable<EntryCollection<any>> {
     return from(this.client.getEntries(query));
   }
 

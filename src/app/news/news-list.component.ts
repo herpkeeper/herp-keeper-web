@@ -29,15 +29,15 @@ export class NewsListComponent extends BaseComponent implements OnInit {
     this.alerts = [];
     this.loading = true;
     const query = {
-      'content_type': 'post',
-      'order': '-sys.createdAt',
-      'limit': this.pageSize,
-      'skip': (this.page - 1) * this.pageSize
+      content_type: 'post',
+      order: '-sys.createdAt',
+      limit: this.pageSize,
+      skip: (this.page - 1) * this.pageSize
     };
     this.cmsService.getEntries(query).pipe(
       map(entries => {
         this.numResults = entries.total;
-        const _posts: Array<Post> = [];
+        const mPosts: Array<Post> = [];
         entries.items.forEach(p => {
           const options = {
             renderNode: {
@@ -48,13 +48,13 @@ export class NewsListComponent extends BaseComponent implements OnInit {
             }
           };
           const body = documentToHtmlString(p.fields.body, options);
-          _posts.push({
+          mPosts.push({
             createdAt: new Date(p.sys.createdAt),
             title: p.fields.title,
-            body: body
+            body
           });
         });
-        return _posts;
+        return mPosts;
       })
     ).subscribe(res => {
       this.posts = res;
