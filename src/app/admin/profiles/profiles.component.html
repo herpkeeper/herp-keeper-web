@@ -1,0 +1,63 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2 text-primary">Profiles</h1>
+  </div>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <div class="mb-2 mt-2">
+    <a routerLink="/admin/profile" class="btn btn-primary"><fa-icon icon="plus"></fa-icon> Create New Profile</a>
+  </div>
+
+  <div class="mb-2 mt-2">
+    <form novalidate [formGroup]="searchForm">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Search</span>
+        </div>
+        <input type="text" class="form-control" formControlName="username" placeholder="Username">
+        <input type="text" class="form-control" formControlName="email" placeholder="Email">
+        <select class="form-control" formControlName="role">
+          <option selected value="">Role</option>
+          <option value="member">member</option>
+          <option value="admin">admin</option>
+        </select>
+        <div class="input-group-append">
+          <button type="button" (click)="search()" class="btn btn-outline-primary"><fa-icon icon="search"></fa-icon></button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="table-responsive-sm mb-2 mt-2">
+    <table class="table table-hover">
+      <thead class="bg-primary text-light">
+        <tr>
+          <th scope="col">Username</th>
+          <th scope="col">Role</th>
+          <th scope="col">Created</th>
+          <th scope="col">Last Updated</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let profile of profiles">
+          <td>{{ profile.username }}</td>
+          <td>{{ profile.role }}</td>
+          <td>{{ profile.createdAt | date }}</td>
+          <td>{{ profile.updatedAt | date }}</td>
+          <td>
+            <a [routerLink]="['/admin/profile', profile._id]" class="btn btn-sm btn-primary mr-2"><fa-icon icon="edit"></fa-icon></a>
+            <button type="button" class="btn btn-sm btn-danger" (click)="delete(profile)" [disabled]="myUsername == profile.username"><fa-icon icon="trash-alt"></fa-icon></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ngb-pagination [collectionSize]="numResults" [(page)]="page" [(pageSize)]="pageSize" (pageChange)="changePage($event)"></ngb-pagination>
+</main>

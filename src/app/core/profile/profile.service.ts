@@ -20,6 +20,12 @@ export class ProfileService {
     return this.http.post<Profile>(url, profile);
   }
 
+  delete(profile: Profile): Observable<Profile> {
+    const url = `${environment.apiUrl}/profile/${profile._id}`;
+
+    return this.http.delete<Profile>(url);
+  }
+
   getById(id: string): Observable<Profile> {
     const url = `${environment.apiUrl}/profile/${id}`;
 

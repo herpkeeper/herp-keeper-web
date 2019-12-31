@@ -11,16 +11,17 @@ import { TopNavComponent } from './top-nav/top-nav.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
 import { FooterComponent } from './footer/footer.component';
+import { AdminSideNavComponent } from './admin-side-nav/admin-side-nav.component';
 
 @NgModule({
-  declarations: [TopNavComponent, NotFoundComponent, ForbiddenComponent, FooterComponent],
+  declarations: [TopNavComponent, NotFoundComponent, ForbiddenComponent, FooterComponent, AdminSideNavComponent],
   imports: [
     CommonModule,
     RouterModule,
     FontAwesomeModule,
     NgbModule
   ],
-  exports: [TopNavComponent, NotFoundComponent, ForbiddenComponent, FooterComponent]
+  exports: [TopNavComponent, NotFoundComponent, ForbiddenComponent, FooterComponent, AdminSideNavComponent]
 })
 export class CoreModule {
 

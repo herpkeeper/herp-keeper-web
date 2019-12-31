@@ -31,6 +31,9 @@ const routes: Routes = [
   { path: 'member',
     loadChildren: () => import('./member/member.module').then(m => m.MemberModule)
   },
+  { path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+  },
   { path: '403', component: ForbiddenComponent },
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '/404' }

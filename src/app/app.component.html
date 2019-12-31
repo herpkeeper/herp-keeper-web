@@ -1,5 +1,6 @@
 <herp-keeper-top-nav></herp-keeper-top-nav>
 <div class="main-content"><!-- [@routeAnimations]="o.isActivated ? o.activatedRoute : ''">-->
+  <herp-keeper-admin-side-nav *ngIf="hasRole('admin')"></herp-keeper-admin-side-nav>
   <router-outlet #o="outlet"></router-outlet>
 </div>
-<herp-keeper-footer></herp-keeper-footer>
+<herp-keeper-footer *ngIf="!hasRole('admin')"></herp-keeper-footer>

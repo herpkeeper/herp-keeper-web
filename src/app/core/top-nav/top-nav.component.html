@@ -12,12 +12,24 @@
         <!-- Home -->
         <li class="nav-item" routerLinkActive="active">
           <a *ngIf="!isLoggedIn()" routerLink="/home" class="nav-link" (click)="isCollapsed = true"><fa-icon icon="home"></fa-icon> Home</a>
-          <a *ngIf="isLoggedIn() && hasRole('member')" routerLink="/member/dashboard" class="nav-link" (click)="isCollapsed = true"><fa-icon icon="home"></fa-icon> Home</a>
+          <a *ngIf="isLoggedIn() && hasRole('member')" routerLink="/member/dashboard" class="nav-link" (click)="isCollapsed = true"><fa-icon icon="home"></fa-icon> Dashboard</a>
+          <a *ngIf="isLoggedIn() && hasRole('admin')" routerLink="/admin/dashboard" class="nav-link" (click)="isCollapsed = true"><fa-icon icon="home"></fa-icon> Dashboard</a>
         </li>
         <!-- Public context -->
         <ng-container *ngIf="!isLoggedIn()">
           <li class="nav-item" routerLinkActive="active">
             <a routerLink="/news" class="nav-link" (click)="isCollapsed = true"><fa-icon icon="newspaper"></fa-icon> News</a>
+          </li>
+        </ng-container>
+        <!-- Admin context -->
+        <ng-container *ngIf="isLoggedIn() && hasRole('admin')">
+          <li routerLinkActive="active" class="nav-item dropdown" ngbDropdown>
+            <a href class="nav-link dropdown-toggle" (click)="dropdownClick($event)" id="adminDataMenu" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
+              <fa-icon icon="database"></fa-icon> Data
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="adminDataMenu" ngbDropdownMenu>
+              <a routerLinkActive="active" routerLink="/admin/profiles" id="adminProfilesMenu" class="dropdown-item" (click)="isCollapsed = true"><fa-icon icon="users"></fa-icon> Profiles</a>
+            </div>
           </li>
         </ng-container>
         <!-- Member context -->
@@ -38,7 +50,7 @@
             <a href class="nav-link dropdown-toggle" (click)="dropdownClick($event)" id="memberMaintenanceMenu" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
               <fa-icon icon="tools"></fa-icon> Maintenance
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="maintenanceMenu" ngbDropdownMenu>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="memberMaintenanceMenu" ngbDropdownMenu>
               <a routerLinkActive="active" routerLink="/member/feed" id="memberFeedMenu" class="dropdown-item" (click)="isCollapsed = true"><fa-icon icon="utensils"></fa-icon> Feed Animals</a>
             </div>
           </li>

@@ -1,0 +1,70 @@
+<ngx-loading [show]="loading"></ngx-loading>
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2 text-primary">{{ username.value || 'New Profile' }}</h1>
+  </div>
+
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+  </p>
+
+  <form novalidate [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+    <!-- Username -->
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" class="form-control" placeholder="Username" required formControlName="username"
+             [class.is-invalid]="username.invalid && (username.touched || username.dirty)">
+    </div>
+
+    <!-- Password -->
+    <div class="form-group" *ngIf="showPassword; else updatePasswordPrompt">
+      <label for="password">Password</label>
+      <input type="password" id="password" class="form-control" placeholder="Password" formControlName="password"
+             [class.is-invalid]="password.invalid && (password.touched || password.dirty)">
+    </div>
+    <ng-template #updatePasswordPrompt>
+      <div class="form-group">
+        <button type="button" class="btn btn-danger" (click)="showPassword = !showPassword"><fa-icon icon="key"></fa-icon> Update Password</button>
+      </div>
+    </ng-template>
+
+    <!-- Name -->
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" class="form-control" placeholder="Name" required formControlName="name"
+             [class.is-invalid]="name.invalid && (name.touched || name.dirty)">
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="text" id="email" class="form-control" placeholder="Email" required formControlName="email"
+             [class.is-invalid]="email.invalid && (email.touched || email.dirty)">
+    </div>
+
+    <!-- Role -->
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select id="role" class="form-control" required formControlName="role">
+        <option value="member">Member</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+
+    <!-- Active -->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="active" formControlName="active">
+      <label class="form-check-label" for="active">
+        Active
+      </label>
+    </div>
+
+    <div class="mt-2">
+      <button class="btn btn-primary mr-2" type="submit" [disabled]="!editForm.valid"><fa-icon icon="save"></fa-icon> Save</button>
+      <a routerLink="/admin/profiles" class="btn btn-danger"><fa-icon icon="times"></fa-icon> Cancel</a>
+    </div>
+  </form>
+
+</main>

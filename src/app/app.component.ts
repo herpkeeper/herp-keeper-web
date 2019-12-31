@@ -23,6 +23,10 @@ export class AppComponent implements OnDestroy, OnInit {
     this.wsService.stop();
   }
 
+  hasRole(role: string): boolean {
+    return this.authService.hasRole(role);
+  }
+
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
