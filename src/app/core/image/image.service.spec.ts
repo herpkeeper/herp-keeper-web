@@ -76,4 +76,8 @@ describe('ImageService', () => {
     req.flush({});
   });
 
+  it('should open image', () => {
+    service.openImage('url');
+  });
+
 });

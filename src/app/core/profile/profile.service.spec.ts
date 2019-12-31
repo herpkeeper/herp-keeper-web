@@ -100,4 +100,17 @@ describe('ProfileService', () => {
     req.flush({});
   });
 
+  it('should delete', (done: DoneFn) => {
+    service.delete({ _id: 'id' } as any).subscribe(res => {
+      expect(res).toBeTruthy();
+      done();
+    }, err => {
+      fail('Should not have failed');
+      done();
+    });
+    const req = httpTestingController.expectOne('http://localhost:8080/api/profile/id');
+    expect(req.request.method).toEqual('DELETE');
+    req.flush({});
+  });
+
 });

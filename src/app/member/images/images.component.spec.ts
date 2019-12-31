@@ -10,12 +10,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { NgxLoadingModule } from 'ngx-loading';
 
-import { ProfileStoreService } from '@app/core';
+import { ImageService, ProfileStoreService } from '@app/core';
 import { ImagesComponent } from './images.component';
 
 describe('ImagesComponent', () => {
   let component: ImagesComponent;
   let fixture: ComponentFixture<ImagesComponent>;
+  let imageService: ImageService;
   let profileStoreService: ProfileStoreService;
   let activatedRoute;
   let modalResolve;
@@ -53,6 +54,7 @@ describe('ImagesComponent', () => {
 
   beforeEach(() => {
     activatedRoute = TestBed.get(ActivatedRoute);
+    imageService = TestBed.get(ImageService);
     profileStoreService = TestBed.get(ProfileStoreService);
     const d1 = new Date('01-01-2000');
     const d2 = new Date();
@@ -198,5 +200,13 @@ describe('ImagesComponent', () => {
     expect(component.alerts.length).toEqual(1);
     expect(component.alerts[0].message).toEqual('Image successfully updated');
   }));
+
+  it('should view image', () => {
+    spyOn(imageService, 'openImage').and.callFake(() => {});
+    spyOn(profileStoreService, 'updateImage').and.returnValue(of({} as any));
+    activatedRoute.data = of({ loading: of({}) });
+    fixture.detectChanges();
+    component.viewImage('url');
+  });
 
 });

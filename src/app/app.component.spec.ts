@@ -26,6 +26,8 @@ describe('AppComponent', () => {
       imports: [
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([
+          { path: 'home', component: DummyComponent },
+          { path: 'news', component: DummyComponent },
           { path: 'member/dashboard', component: DummyComponent }
         ]),
         CoreModule
@@ -57,6 +59,41 @@ describe('AppComponent', () => {
     });
     component.ngOnInit();
     expect(wsService.start).toHaveBeenCalled();
+  });
+
+  it('should call navigate to proper dashboard if logged in and /', () => {
+    spyOn(authService, 'navigateHome').and.callFake(() => {});
+    spyOn(authService, 'hasRole').and.returnValue(true);
+    spyOn(wsService, 'start').and.callFake(() => {
+    });
+    spyOn(authService, 'isLoggedIn').and.returnValue(true);
+    component.ngOnInit();
+    fixture.detectChanges();
+    router.navigate(['']);
+    expect(authService.navigateHome).toHaveBeenCalled();
+  });
+
+  it('should call navigate to proper dashboard if logged in and /home', () => {
+    spyOn(authService, 'navigateHome').and.callFake(() => {});
+    spyOn(authService, 'hasRole').and.returnValue(true);
+    spyOn(wsService, 'start').and.callFake(() => {
+    });
+    spyOn(authService, 'isLoggedIn').and.returnValue(true);
+    component.ngOnInit();
+    fixture.detectChanges();
+    router.navigate(['/home']);
+    expect(authService.navigateHome).toHaveBeenCalled();
+  });
+
+  it('should not try to navigate to dashboard', () => {
+    spyOn(authService, 'navigateHome').and.callFake(() => {});
+    spyOn(authService, 'hasRole').and.returnValue(true);
+    spyOn(wsService, 'start').and.callFake(() => {
+    });
+    component.ngOnInit();
+    fixture.detectChanges();
+    router.navigate(['/news']);
+    expect(authService.navigateHome).not.toHaveBeenCalled();
   });
 
 });

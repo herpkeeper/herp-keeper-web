@@ -10,13 +10,14 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgxLoadingModule } from 'ngx-loading';
 
-import { ProfileStoreService } from '@app/core';
+import { ImageService, ProfileStoreService } from '@app/core';
 import { SpeciesListComponent } from './species-list.component';
 
 describe('SpeciesListComponent', () => {
   let component: SpeciesListComponent;
   let fixture: ComponentFixture<SpeciesListComponent>;
   let profileStoreService: ProfileStoreService;
+  let imageService: ImageService;
   let activatedRoute;
   let modalResolve;
   let modalReject;
@@ -52,6 +53,7 @@ describe('SpeciesListComponent', () => {
 
   beforeEach(() => {
     activatedRoute = TestBed.get(ActivatedRoute);
+    imageService = TestBed.get(ImageService);
     profileStoreService = TestBed.get(ProfileStoreService);
     profileStoreService.profile = {
       species: [{
@@ -133,5 +135,13 @@ describe('SpeciesListComponent', () => {
     expect(component.alerts.length).toEqual(1);
     expect(component.alerts[0].message).toEqual('Species successfully deleted');
   }));
+
+  it('should view image', () => {
+    spyOn(imageService, 'openImage').and.callFake(() => {});
+    spyOn(profileStoreService, 'removeSpecies').and.returnValue(of({} as any));
+    activatedRoute.data = of({ loading: of(true) });
+    fixture.detectChanges();
+    component.viewImage('url');
+  });
 
 });

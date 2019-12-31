@@ -10,13 +10,14 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgxLoadingModule } from 'ngx-loading';
 
-import { ProfileStoreService } from '@app/core';
+import { ImageService, ProfileStoreService } from '@app/core';
 import { LocationsComponent } from './locations.component';
 
 describe('LocationsComponent', () => {
   let component: LocationsComponent;
   let fixture: ComponentFixture<LocationsComponent>;
   let profileStoreService: ProfileStoreService;
+  let imageService: ImageService;
   let activatedRoute;
   let modalResolve;
   let modalReject;
@@ -52,6 +53,7 @@ describe('LocationsComponent', () => {
 
   beforeEach(() => {
     activatedRoute = TestBed.get(ActivatedRoute);
+    imageService = TestBed.get(ImageService);
     profileStoreService = TestBed.get(ProfileStoreService);
     profileStoreService.profile = {
       locations: [{
@@ -116,5 +118,13 @@ describe('LocationsComponent', () => {
     expect(component.alerts.length).toEqual(1);
     expect(component.alerts[0].message).toEqual('Location successfully deleted');
   }));
+
+  it('should view image', () => {
+    spyOn(imageService, 'openImage').and.callFake(() => {});
+    spyOn(profileStoreService, 'removeLocation').and.returnValue(of({} as any));
+    activatedRoute.data = of({ loading: of(true) });
+    fixture.detectChanges();
+    component.viewImage('url');
+  });
 
 });

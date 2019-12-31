@@ -20,6 +20,20 @@ describe('NewsListComponent', () => {
         createdAt: new Date()
       },
       fields: {
+        body: {
+          content: [{
+            nodeType: 'embedded-asset-block',
+            data: {
+              target: {
+                fields: {
+                  file: {
+                    url: 'url'
+                  }
+                }
+              }
+            }
+          }]
+        }
       }
     }]
   };
